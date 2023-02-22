@@ -1,10 +1,12 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
-from src.db import Base
+from src.db.base import Base
 
 
 class User(Base):
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable=False)
     discord = Column(String, nullable=False, unique=True, index=True)
