@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
-from src.db.base import Base
+from db.session import Base
 
 
 class User(Base):
-    __table_args__ = {'extend_existing': True}
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable=False)

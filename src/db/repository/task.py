@@ -10,3 +10,8 @@ def create_new_task(task: TaskCreate, db: Session, owner_id: int):
     db.commit()
     db.refresh(task_object)
     return task_object
+
+
+def get_task_list(db: Session):
+    tasks = db.query(Task).all()
+    return tasks

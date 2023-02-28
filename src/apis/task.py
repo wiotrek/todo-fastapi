@@ -1,13 +1,18 @@
-from fastapi import APIRouter
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
-from fastapi import Depends
 
 from src.schemas.task import TaskCreate, ShowTask
 from src.db.session import get_db
-from src.db.repository.task import create_new_task
+from src.db.repository.task import create_new_task, get_task_list
 
 
 router = APIRouter()
+
+
+@router.get("/")
+def create_task(db: Session = Depends(get_db)):
+    tasks = get_task_list(db)
+    return tasks
 
 
 @router.post("/create-task", response_model=ShowTask)
