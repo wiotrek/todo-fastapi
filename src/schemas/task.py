@@ -16,6 +16,12 @@ class TaskCreate(TaskBase):
     description: str
 
 
+# this will be used to validate data while creating a Job
+class TaskUpdate(BaseModel):
+    title: str
+    description: str
+
+
 # this will be used to format the response to not to have id,owner_id etc
 class ShowTask(TaskBase):
     title: str
