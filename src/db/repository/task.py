@@ -17,6 +17,15 @@ def get_task_list(db: Session):
     return tasks
 
 
+def remove_task(task_id: int, db: Session):
+    existing_task = db.query(Task).filter(Task.id == task_id)
+    if not existing_task.first():
+        return 0
+    existing_task.delete(synchronize_session=False)
+    db.commit()
+    return 1
+
+
 def get_task_single(task_id: int, db: Session):
     task = db.query(Task)\
         .filter(Task.id == task_id)\

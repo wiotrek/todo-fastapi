@@ -7,7 +7,8 @@ from src.db.repository.task import (
     create_new_task,
     get_task_single,
     get_task_list,
-    edit_task_single
+    edit_task_single,
+    remove_task
 )
 
 
@@ -38,3 +39,11 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     current_user = 1
     task = create_new_task(task=task, db=db, owner_id=current_user)
     return task
+
+
+@router.delete("/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    _ = remove_task(task_id=task_id, db=db)
+    return {
+        "msg": "removing"
+    }
