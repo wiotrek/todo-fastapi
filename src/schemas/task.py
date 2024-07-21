@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import date, datetime
+import strawberry
 
 
 # shared properties
@@ -22,10 +23,10 @@ class TaskUpdate(BaseModel):
     description: str
 
 
-# this will be used to format the response to not to have id,owner_id etc
-class ShowTask(TaskBase):
+@strawberry.type
+class TaskType(TaskBase):
+    owner_id: int
     title: str
-    date_posted: date
     description: Optional[str]
 
     class Config:  # to convert non dict obj to json
