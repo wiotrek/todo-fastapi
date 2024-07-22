@@ -1,24 +1,23 @@
-from sqlalchemy.orm import Session
-
-from src.schemas.user import UserCreate
+from db.session import SessionLocal
+from src.schemas.user import UserCreateType
 from src.db.models.user import User
 from src.core.hashing import Hasher
 from src.schemas.user import UserType
-from src.db.session import SessionLocal
 
 
-def create_new_user(user: UserCreate, db: Session):
+def create_new_user(user: UserCreateType):
+    db = SessionLocal()
     user = User(
         username=user.username,
         hashed_password=Hasher.get_password_hash(user.password),
-        discord="user#123",
+        discord=user.discord,
         is_active=True,
         is_superuser=False,
     )
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
+    return UserType.from_orm(user)
 
 
 def get_user_list():

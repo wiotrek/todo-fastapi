@@ -5,19 +5,10 @@ import strawberry
 from src.schemas.task import TaskType
 
 
-# properties required during user creation
-class UserCreate(BaseModel):
+class UserCreateType(BaseModel):
     username: str
     password: str
     discord: str
-
-
-class ShowUser(BaseModel):
-    username: str
-    is_active: bool
-
-    class Config:
-        orm_mode = True
 
 
 @strawberry.type
