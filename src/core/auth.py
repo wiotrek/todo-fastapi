@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 from db.models.user import User
 from db.repository.user import create_new_user
 from schemas.token import TokenType
-from schemas.user import UserCreateType
+from schemas.user import UserCreateType, UserType
 
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"

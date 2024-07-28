@@ -1,8 +1,11 @@
+from sqlalchemy.exc import IntegrityError
+from fastapi import HTTPException, status
+
 from db.session import SessionLocal
-from src.schemas.user import UserCreateType
-from src.db.models.user import User
-from src.core.hashing import Hasher
-from src.schemas.user import UserType
+from schemas.user import UserCreateType
+from db.models.user import User
+from core.hashing import Hasher
+from schemas.user import UserType
 
 
 def create_new_user(user_create: UserCreateType) -> UserType:
@@ -14,10 +17,18 @@ def create_new_user(user_create: UserCreateType) -> UserType:
         is_active=True,
         is_superuser=False,
     )
+
     db.add(user)
-    db.commit()
-    db.refresh(user)
-    return UserType.from_orm(user)
+    try:
+        db.commit()
+        db.refresh(user)
+        return UserType.from_orm(user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="user already exist"
+        )
 
 
 def get_user_list():

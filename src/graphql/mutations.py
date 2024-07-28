@@ -24,7 +24,8 @@ class Mutation:
     @strawberry.mutation
     def register(self, username: str, password: str, discord: str) -> TokenType:
         user_create = UserCreateType(username=username, password=password, discord=discord)
-        return register_user(user_create)
+        token_type = register_user(user_create)
+        return token_type
 
     @strawberry.mutation
     def create_task(self, owner_id: int, title: str) -> TaskType:
