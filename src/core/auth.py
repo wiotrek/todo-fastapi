@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
 from db.models.user import User
+from db.repository.user import create_new_user
+from schemas.token import TokenType
+from schemas.user import UserCreateType
 
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
@@ -31,6 +34,12 @@ def authenticate_user(db: Session, username: str, password: str):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
+
+def register_user(user_create: UserCreateType) -> TokenType:
+    user_type = create_new_user(user_create)
+    access_token = create_access_token(data={"sub": user_type.username})
+    return TokenType(access_token=access_token, token_type="bearer")
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):

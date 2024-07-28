@@ -5,12 +5,12 @@ from src.core.hashing import Hasher
 from src.schemas.user import UserType
 
 
-def create_new_user(user: UserCreateType):
+def create_new_user(user_create: UserCreateType) -> UserType:
     db = SessionLocal()
     user = User(
-        username=user.username,
-        hashed_password=Hasher.get_password_hash(user.password),
-        discord=user.discord,
+        username=user_create.username,
+        hashed_password=Hasher.get_password_hash(user_create.password),
+        discord=user_create.discord,
         is_active=True,
         is_superuser=False,
     )
