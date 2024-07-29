@@ -1,26 +1,16 @@
 import jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 
+from core.hashing import Hasher
 from db.models.user import User
 from db.repository.user import create_new_user
 from schemas.token import TokenType
-from schemas.user import UserCreateType, UserType
+from schemas.user import UserCreateType
 
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 
 def get_user(db: Session, username: str):
@@ -31,7 +21,7 @@ def authenticate_user(db: Session, username: str, password: str):
     user = get_user(db, username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not Hasher.verify_password(password, user.hashed_password):
         return False
     return user
 

@@ -12,7 +12,6 @@ class Query:
     def all_users(self, info) -> typing.List[UserType]:
         context: Context = info.context
 
-        if context.user:
-            return get_user_list(context.db)
+        if isinstance(context, Context) and context.user:
+            return get_user_list()
         raise Exception("Not authenticated")
-

@@ -1,3 +1,5 @@
+import typing
+
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 
@@ -31,7 +33,7 @@ def create_new_user(user_create: UserCreateType) -> UserType:
         )
 
 
-def get_user_list():
+def get_user_list() -> typing.List[UserType]:
     db = SessionLocal()
     users = db.query(User).all()
     return [UserType.from_orm(user) for user in users]
