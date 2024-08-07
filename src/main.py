@@ -1,18 +1,36 @@
 import uvicorn
 from fastapi import FastAPI
+import strawberry
+from strawberry.fastapi import GraphQLRouter
 
-from apis.base import api_router
-from core.config import settings
+from src.db.session import Base, engine
+from src.core.config import settings
+from src.graphql.queries import Query
+from src.graphql.mutations import Mutation
+from src.graphql.context import get_context
 
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version=settings.PROJECT_VERSION,
-    openapi_url="/api/openapi.json",
-    docs_url="/api/docs",
+app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
+
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
+
+@app.on_event("shutdown")
+def shutdown():
+    pass
+
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
+
+graphql_app = GraphQLRouter(
+    schema,
+    context_getter=get_context,
 )
 
-app.include_router(api_router, prefix="/api", tags=["api_router"])
+app.include_router(graphql_app, prefix="/graphql")
 
 if __name__ == "__main__":
     uvicorn.run(

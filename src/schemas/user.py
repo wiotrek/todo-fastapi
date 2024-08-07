@@ -1,16 +1,22 @@
 from pydantic import BaseModel
+from typing import List, Optional
+import strawberry
+
+from src.schemas.task import TaskType
 
 
-# properties required during user creation
-class UserCreate(BaseModel):
+class UserCreateType(BaseModel):
     username: str
     password: str
     discord: str
 
 
-class ShowUser(BaseModel):
+@strawberry.type
+class UserType(BaseModel):
+    id: int
     username: str
-    is_active: bool
+    discord: str
+    tasks: Optional[List[TaskType]] = []
 
     class Config:
         orm_mode = True
