@@ -2,6 +2,7 @@ import jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
+
 from core.hashing import Hasher
 from db.models.user import User
 from db.repository.user import create_new_user

@@ -7,6 +7,7 @@ from src.db.session import Base, engine
 from src.core.config import settings
 from src.graphql.queries import Query
 from src.graphql.mutations import Mutation
+from src.graphql.context import get_context
 
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
@@ -23,7 +24,12 @@ def shutdown():
 
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
-graphql_app = GraphQLRouter(schema)
+
+graphql_app = GraphQLRouter(
+    schema,
+    context_getter=get_context,
+)
+
 app.include_router(graphql_app, prefix="/graphql")
 
 if __name__ == "__main__":
