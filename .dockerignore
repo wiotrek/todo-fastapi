@@ -1,0 +1,9 @@
+.git
+Dockerfile
+.DS_Store
+.gitignore
+.dockerignore
+readme.md
+Makefile
+
+.idea/
