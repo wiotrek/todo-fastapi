@@ -2,10 +2,10 @@ import jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
-
 from core.hashing import Hasher
 from db.models.user import User
 from db.repository.user import create_new_user
+from db.session import SessionLocal
 from schemas.token import TokenType
 from schemas.user import UserCreateType
 
@@ -14,12 +14,13 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-def get_user(db: Session, username: str):
+def get_user(username: str):
+    db: Session = SessionLocal()
     return db.query(User).filter(User.username == username).first()
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = get_user(db, username)
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
     if not user:
         return False
     if not Hasher.verify_password(password, user.hashed_password):
@@ -44,7 +45,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
-def get_current_user(db: Session, token: str):
+def get_current_user(token: str):
     credentials_exception = Exception("Could not validate credentials")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -53,7 +54,7 @@ def get_current_user(db: Session, token: str):
             raise credentials_exception
     except jwt.DecodeError:
         raise credentials_exception
-    user = get_user(db, username=username)
+    user = get_user(username)
     if user is None:
         raise credentials_exception
     return user

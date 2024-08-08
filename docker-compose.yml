@@ -4,6 +4,22 @@ volumes:
   db-data:
 
 services:
+  
+  server:
+    image: todo-fastapi:latest
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      FASTAPI_PORT: 3000
+      FASTAPI_RELOAD: True
+      FASTAPI_HOST: 0.0.0.0
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test123
+      POSTGRES_SERVER: 0.0.0.0
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: todo-db
 
   db:
     restart: always
